@@ -1,16 +1,11 @@
-import { useState } from "react";
 import server from "./server";
 
 function Wallet({
   address,
   setAddress,
-  setPrivateKey,
   balance,
   setBalance,
 }) {
-  const [privateKeyText, setPrivateKeyText] = useState();
-  const [showPrivateKeyInput, setShowPrivateKeyInput] = useState(false);
-
   async function onAddressChange(evt) {
     const address = evt.target.value;
     setAddress(address);
@@ -22,17 +17,6 @@ function Wallet({
     } else {
       setBalance(0);
     }
-  }
-
-  function onPrivateKeyChange(evt) {
-    const privateKey = evt.target.value;
-    setPrivateKeyText(privateKey);
-  }
-
-  function onConfirm() {
-    setPrivateKeyText("");
-    setPrivateKey(privateKeyText);
-    setShowPrivateKeyInput(false);
   }
 
   return (
@@ -47,23 +31,6 @@ function Wallet({
           onChange={onAddressChange}
         ></input>
       </label>
-
-      {showPrivateKeyInput ? (
-        <label>
-          Wallet Private Key
-          <div>
-            <input
-              className="key"
-              placeholder="Enter your private key"
-              value={privateKeyText}
-              onChange={onPrivateKeyChange}
-            ></input>
-            <div className="button" onClick={() => onConfirm()}>Confirm</div>
-          </div>
-        </label>
-      ) : (
-        <div className="button" onClick={() => setShowPrivateKeyInput(true)}>Enter Private Key</div>
-      )}
 
       <div className="balance">Balance: {balance}</div>
     </div>

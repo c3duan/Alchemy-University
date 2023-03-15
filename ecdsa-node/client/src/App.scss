@@ -68,11 +68,6 @@ input {
   display: flex;
   flex-direction: column;
 
-  .key {
-    width: 65%;
-    margin-right: 10px;
-  }
-
   .balance {
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -88,4 +83,22 @@ input {
 .transfer {
   display: flex;
   flex-direction: column;
+}
+
+.modal {
+  position: fixed; /* Stay in place */
+  left: 35%;
+  top: 20%;
+  z-index: 1;
+  overflow: auto; /* Enable scroll if needed */
+  box-shadow: 1px 1px #319795;
+
+  .key {
+    width: 100%;
+  }
+
+  .actions .button {
+    margin-right: 10px;
+    margin-right: 10px;
+  }
 }

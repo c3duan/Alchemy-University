@@ -1,67 +1,56 @@
 import { useState } from "react";
-import server from "./server";
-import crypto from "./crypto";
+import Key from "./Key";
 
-function Transfer({ address, privateKey, setBalance }) {
+function Transfer({ address, setBalance }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
+  const [message, setMessage] = useState({});
+  const [showKey, setShowKey] = useState(false);
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
-  async function transfer(evt) {
+  function transfer(evt) {
     evt.preventDefault();
-
-    // build the transaction payload composed of
-    // the message itself (amount to transfer and recipient) and
-    // the signature of the transaction build from the user private key
-    // and the message, inside the wallet.
-    const message = {
+    setMessage({
       sender: address,
       recipient,
       amount: parseInt(sendAmount),
-    };
-
-    const signature = await crypto.sign(privateKey, message);
-    const transaction = {
-      message,
-      signature,
-    };
-
-    try {
-      const {
-        data: { balance },
-      } = await server.post(`send`, transaction);
-      setBalance(balance);
-      alert("Success!");
-    } catch (ex) {
-      alert(ex.response.data.message);
-    }
+    });
+    setShowKey(true);
   }
 
   return (
-    <form className="container transfer" onSubmit={transfer}>
-      <h1>Send Transaction</h1>
+    <div>
+      <form className="container transfer" onSubmit={transfer}>
+        <h1>Send Transaction</h1>
 
-      <label>
-        Send Amount
-        <input
-          placeholder="1, 2, 3..."
-          value={sendAmount}
-          onChange={setValue(setSendAmount)}
-        ></input>
-      </label>
+        <label>
+          Send Amount
+          <input
+            placeholder="1, 2, 3..."
+            value={sendAmount}
+            onChange={setValue(setSendAmount)}
+          ></input>
+        </label>
 
-      <label>
-        Recipient
-        <input
-          placeholder="Type an address, for example: 0x2"
-          value={recipient}
-          onChange={setValue(setRecipient)}
-        ></input>
-      </label>
+        <label>
+          Recipient
+          <input
+            placeholder="Type an address, for example: 0x2"
+            value={recipient}
+            onChange={setValue(setRecipient)}
+          ></input>
+        </label>
 
-      <input type="submit" className="button" value="Transfer" />
-    </form>
+        <input type="submit" className="button" value="Transfer" />
+      </form>
+      <Key
+        message={message}
+        setBalance={setBalance}
+        show={showKey}
+        close={() => setShowKey(false)}
+      />
+    </div>
   );
 }
 
